@@ -4,7 +4,8 @@ Use this file to choose the images used by the website. You can edit the filenam
 
 ## 1. COVER IMAGE
 
-**File:** `assets/REPLACE_WITH_COVER_IMAGE_FILENAME`
+**File:** `<img width="1942" height="809" alt="5 havox hero cover image" src="https://github.com/user-attachments/assets/463ec349-1db6-4905-ac43-48fd6506c888" />
+
 
 Replace the filename above with the exact filename of the image you want as the HAVOX cover/hero image.
 
@@ -15,7 +16,8 @@ Example:
 
 ## 2. BACKGROUND IMAGE
 
-**File:** `assets/REPLACE_WITH_BACKGROUND_IMAGE_FILENAME`
+**File:** `<img width="1536" height="1024" alt="6 HAVOX background" src="https://github.com/user-attachments/assets/f766756b-fc92-41fe-9ed1-39d0b7d542ac" />
+
 
 Replace the filename above with the exact filename of the image you want as the main HAVOX website background.
 
