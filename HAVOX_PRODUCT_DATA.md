@@ -88,4 +88,24 @@ DELIVERY_INFO: Islandwide delivery across Sri Lanka. Delivery fee is Rs. 350. Es
 RETURN_EXCHANGE_INFO: 
 
 ## SIZE GUIDE
-<img width="1024" height="788" alt="size guide" src="https://github.com/user-attachments/assets/974299eb-e551-46f1-a8c5-b9b3f06246d3" />
+
+> Enter your measurements below. Example: 40 inches. Leave blank until you confirm the measurements.
+M_CHEST: 
+M_LENGTH: 
+M_SHOULDER: 
+
+L_CHEST: 
+L_LENGTH: 
+L_SHOULDER: 
+
+XL_CHEST: 
+XL_LENGTH: 
+XL_SHOULDER: 
+
+## SOCIAL MEDIA
+
+INSTAGRAM: 
+TIKTOK: 
+FACEBOOK: 
+YOUTUBE: 
+WHATSAPP: 
