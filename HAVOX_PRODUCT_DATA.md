@@ -90,22 +90,22 @@ RETURN_EXCHANGE_INFO:
 ## SIZE GUIDE
 
 > Enter your measurements below. Example: 40 inches. Leave blank until you confirm the measurements.
-M_CHEST: 
-M_LENGTH: 
-M_SHOULDER: 
+M_CHEST: 40 inches
+M_LENGTH: 27 inches
+M_SHOULDER: 9 inches
 
-L_CHEST: 
-L_LENGTH: 
-L_SHOULDER: 
+L_CHEST: 42 inches
+L_LENGTH: 28 inches
+L_SHOULDER: 9.5 inches
 
-XL_CHEST: 
-XL_LENGTH: 
-XL_SHOULDER: 
+XL_CHEST: 44 inches
+XL_LENGTH: 29 inches
+XL_SHOULDER: 10 inches
 
 ## SOCIAL MEDIA
 
-INSTAGRAM: 
+INSTAGRAM: https://www.instagram.com/havoxds?utm_source=qr&igsh=MW8xbm02MjJtNzB4ag==
 TIKTOK: 
-FACEBOOK: 
+FACEBOOK:https://www.facebook.com/share/19qpkDw4o 
 YOUTUBE: 
-WHATSAPP: 
+WHATSAPP:075 180 4730 
