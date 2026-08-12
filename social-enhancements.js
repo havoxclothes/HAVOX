@@ -7,13 +7,14 @@ YouTube:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7.1a2.8 2.8 0 
 WhatsApp:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a8.8 8.8 0 0 0-7.7 13l-1 4 4.1-1a8.9 8.9 0 1 0 4.6-16Zm0 15.9c-1.3 0-2.5-.4-3.6-1l-.3-.2-2.4.6.6-2.3-.2-.4A6.9 6.9 0 1 1 12 18.9Zm3.8-5.1c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1-.1.2-.5.7-.6.8-.1.2-.2.2-.4.1-1.1-.5-1.9-1.3-2.5-2.4-.2-.3.2-.3.6-1.1.1-.2.1-.3 0-.4l-.6-1.4c-.2-.4-.4-.3-.5-.3h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.8 3.5 1.4.6 1.9.7 2.6.6.4-.1 1.2-.5 1.4-.9.2-.4.2-.8.1-.9-.1-.1-.3-.2-.5-.3Z" fill="currentColor"/></svg>'
 };
 const COLORS={Instagram:'#E1306C',TikTok:'#25F4EE',Facebook:'#1877F2',YouTube:'#FF0033',WhatsApp:'#25D366'};
-function decorate(){
- document.querySelectorAll('#socialLinks a,#footerSocial a').forEach(a=>{
+function decorate(root=document){
+ root.querySelectorAll('#socialLinks a:not([data-havox-social]),#footerSocial a:not([data-havox-social])').forEach(a=>{
   const text=a.textContent.replace('↗','').trim();
   const name=Object.keys(ICONS).find(k=>text.toLowerCase().startsWith(k.toLowerCase()));
   if(!name)return;
   const color=COLORS[name];
   a.classList.add('social-link','social-'+name.toLowerCase());
+  a.setAttribute('data-havox-social','true');
   a.setAttribute('aria-label','Follow HAVOX on '+name);
   a.style.setProperty('--platform',color);
   a.innerHTML='<span class="social-icon">'+ICONS[name]+'</span><span class="social-copy"><b>'+name+'</b><small>Follow HAVOX</small></span><em>↗</em>';
@@ -42,5 +43,12 @@ style.textContent=`
 `;
 document.head.appendChild(style);
 decorate();
-new MutationObserver(decorate).observe(document.body,{subtree:true,childList:true});
+const observer=new MutationObserver(mutations=>{
+  for(const mutation of mutations){
+    for(const node of mutation.addedNodes){
+      if(node.nodeType===1) decorate(node);
+    }
+  }
+});
+observer.observe(document.body,{subtree:true,childList:true});
 })();
