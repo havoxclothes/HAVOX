@@ -1,8 +1,7 @@
 import { neon } from '@neondatabase/serverless';
-import type { Config } from '@netlify/functions';
 
 export default async () => {
-  const sql = neon(process.env.DATABASE_URL!);
+  const sql = neon(process.env.DATABASE_URL);
   const rows = await sql`
     SELECT p.id, p.name, p.slug, p.price, p.image_path, p.active,
            COALESCE(
@@ -17,16 +16,14 @@ export default async () => {
     ORDER BY p.id;
   `;
 
-  const response = rows.map((p: any) => ({
+  return Response.json(rows.map((p) => ({
     id: Number(p.id),
     name: p.name,
     slug: p.slug,
     price: Number(p.price),
     image: p.image_path,
     stock: p.stock || {}
-  }));
-
-  return Response.json(response, { headers: { 'Cache-Control': 'no-store' } });
+  })), { headers: { 'Cache-Control': 'no-store' } });
 };
 
-export const config: Config = { path: '/api/products' };
+export const config = { path: '/api/products' };
