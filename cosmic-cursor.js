@@ -1,1 +1,189 @@
-(()=>{if(matchMedia('(pointer:coarse)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;const c=document.createElement('canvas');c.className='cosmic-cursor';Object.assign(c.style,{position:'fixed',inset:0,width:'100vw',height:'100vh',zIndex:9999,pointerEvents:'none'});document.body.appendChild(c);const x=c.getContext('2d');let w,h,d=1;const p={x:innerWidth/2,y:innerHeight/2,tx:innerWidth/2,ty:innerHeight/2,s:0},q={x:p.x,y:p.y},a=[],stars=[];function z(){d=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0)}z();addEventListener('resize',z,{passive:true});for(let i=0;i<28;i++)stars.push({a:Math.random()*6.28,r:10+Math.random()*40,z:.5+Math.random()*1.3,t:Math.random()*6.28});addEventListener('pointermove',e=>{p.s=Math.min(1,Math.hypot(e.clientX-p.tx,e.clientY-p.ty)/45);p.tx=e.clientX;p.ty=e.clientY},{passive:true});addEventListener('pointerdown',()=>{for(let i=0;i<14;i++){let t=Math.random()*6.28,s=1+Math.random()*3;a.push({x:q.x,y:q.y,vx:Math.cos(t)*s,vy:Math.sin(t)*s,l:1,z:1+Math.random()*2})}},{passive:true});function f(t){x.clearRect(0,0,w,h);q.x+=(p.tx-q.x)*.38;q.y+=(p.ty-q.y)*.38;p.s*=.92;if(p.s>.03){let A=Math.atan2(q.y-p.ty,q.x-p.tx)+Math.PI;for(let i=0;i<(p.s>.5?2:1);i++){let b=A+(Math.random()-.5)*.9,s=1+Math.random()*2;a.push({x:q.x,y:q.y,vx:Math.cos(b)*s,vy:Math.sin(b)*s,l:1,z:.5+Math.random()*(1+p.s*2)})}if(a.length>100)a.splice(0,a.length-100)}stars.forEach(r=>{r.a+=.002;let X=q.x+Math.cos(r.a)*r.r,Y=q.y+Math.sin(r.a)*r.r*.6; x.globalAlpha=.2+.35*(Math.sin(t*.002+r.t)+1)/2;x.fillStyle='#fff';x.beginPath();x.arc(X,Y,r.z,0,6.28);x.fill()});a.forEach(r=>{r.x+=r.vx;r.y+=r.vy;r.vx*=.95;r.vy*=.95;r.l-=.025;x.globalAlpha=Math.max(0,r.l);x.fillStyle='#fff';x.shadowBlur=8;x.shadowColor='rgba(160,200,255,.9)';x.beginPath();x.arc(r.x,r.y,r.z*r.l,0,6.28);x.fill()});x.globalAlpha=1;x.shadowBlur=0;let g=x.createRadialGradient(q.x,q.y,0,q.x,q.y,35+p.s*20);g.addColorStop(0,'rgba(255,255,255,.18)');g.addColorStop(1,'rgba(120,160,255,0)');x.fillStyle=g;x.beginPath();x.arc(q.x,q.y,40,0,6.28);x.fill();let A=Math.atan2(p.ty-q.y,p.tx-q.x);x.save();x.translate(q.x,q.y);x.rotate(A);x.fillStyle='#fff';x.shadowBlur=14;x.shadowColor='rgba(180,210,255,1)';x.beginPath();x.moveTo(9,0);x.lineTo(-4,-3);x.lineTo(-1,0);x.lineTo(-4,3);x.closePath();x.fill();x.restore();x.shadowBlur=0;requestAnimationFrame(f)}requestAnimationFrame(f)})();
+(() => {
+  'use strict';
+
+  const finePointer = window.matchMedia('(pointer: fine)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!finePointer.matches || reducedMotion.matches) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.className = 'cosmic-cursor';
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  const mouse = { x: innerWidth / 2, y: innerHeight / 2, lastX: innerWidth / 2, lastY: innerHeight / 2, speed: 0, hovering: false, active: false };
+  const head = { x: mouse.x, y: mouse.y };
+  const particles = [];
+  const stars = [];
+  let width = innerWidth;
+  let height = innerHeight;
+  let dpr = Math.min(devicePixelRatio || 1, 2);
+  let lastFrame = 0;
+  let burstQueue = 0;
+
+  const resize = () => {
+    width = innerWidth;
+    height = innerHeight;
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  resize();
+  addEventListener('resize', resize, { passive: true });
+
+  for (let i = 0; i < 24; i++) {
+    stars.push({ angle: Math.random() * Math.PI * 2, radius: 8 + Math.random() * 38, size: 0.5 + Math.random() * 1.2, phase: Math.random() * Math.PI * 2 });
+  }
+
+  const updateHover = target => {
+    mouse.hovering = !!target?.closest?.('a, button, .product, .pill, input, textarea, select, .bag-btn');
+  };
+
+  addEventListener('pointermove', event => {
+    const dx = event.clientX - mouse.lastX;
+    const dy = event.clientY - mouse.lastY;
+    mouse.speed = Math.min(1, Math.hypot(dx, dy) / 32);
+    mouse.lastX = event.clientX;
+    mouse.lastY = event.clientY;
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+    mouse.active = true;
+    updateHover(event.target);
+  }, { passive: true });
+
+  addEventListener('pointerdown', () => {
+    if (!mouse.active) return;
+    burstQueue = 18;
+  }, { passive: true });
+
+  const addParticle = (x, y, angle, speed, size, life) => {
+    particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, size, life, maxLife: life });
+    if (particles.length > 80) particles.splice(0, particles.length - 80);
+  };
+
+  const draw = time => {
+    if (time - lastFrame < 12) {
+      requestAnimationFrame(draw);
+      return;
+    }
+    lastFrame = time;
+
+    ctx.clearRect(0, 0, width, height);
+    head.x += (mouse.x - head.x) * 0.42;
+    head.y += (mouse.y - head.y) * 0.42;
+    mouse.speed *= 0.88;
+
+    const angle = Math.atan2(mouse.lastY - head.y, mouse.lastX - head.x);
+    const tailAngle = angle + Math.PI;
+    const intensity = mouse.hovering ? 1.35 : 1;
+
+    if (mouse.active && mouse.speed > 0.025) {
+      const count = mouse.speed > 0.55 ? 3 : 1;
+      for (let i = 0; i < count; i++) {
+        const spread = (Math.random() - 0.5) * 0.7;
+        addParticle(
+          head.x - Math.cos(angle) * (3 + Math.random() * 8),
+          head.y - Math.sin(angle) * (3 + Math.random() * 8),
+          tailAngle + spread,
+          0.35 + mouse.speed * 1.6,
+          0.7 + Math.random() * (1.5 * intensity),
+          0.5 + Math.random() * 0.45
+        );
+      }
+    }
+
+    while (burstQueue > 0) {
+      const a = Math.random() * Math.PI * 2;
+      addParticle(head.x, head.y, a, 1.4 + Math.random() * 3.2, 0.8 + Math.random() * 1.8, 0.45 + Math.random() * 0.4);
+      burstQueue--;
+    }
+
+    // Soft galaxy halo.
+    const haloRadius = mouse.hovering ? 48 : 34;
+    const halo = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, haloRadius);
+    halo.addColorStop(0, mouse.hovering ? 'rgba(255,255,255,.25)' : 'rgba(255,255,255,.16)');
+    halo.addColorStop(0.3, 'rgba(175,205,255,.10)');
+    halo.addColorStop(1, 'rgba(120,160,255,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(head.x, head.y, haloRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tiny stars orbiting the comet head.
+    stars.forEach(star => {
+      star.angle += 0.0015 + mouse.speed * 0.002;
+      const x = head.x + Math.cos(star.angle) * star.radius;
+      const y = head.y + Math.sin(star.angle) * star.radius * 0.58;
+      const alpha = (0.18 + (Math.sin(time * 0.002 + star.phase) + 1) * 0.16) * intensity;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(x, y, star.size * intensity, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // Particle tail.
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const particle = particles[i];
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      particle.vx *= 0.94;
+      particle.vy *= 0.94;
+      particle.life -= 0.026;
+      if (particle.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+      const alpha = particle.life / particle.maxLife;
+      ctx.globalAlpha = alpha * 0.85;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.size * alpha, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Comet streak behind the head.
+    if (mouse.speed > 0.05) {
+      const length = 10 + mouse.speed * 24;
+      const gradient = ctx.createLinearGradient(head.x, head.y, head.x - Math.cos(angle) * length, head.y - Math.sin(angle) * length);
+      gradient.addColorStop(0, mouse.hovering ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.65)');
+      gradient.addColorStop(1, 'rgba(150,190,255,0)');
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = mouse.hovering ? 2.2 : 1.4;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(head.x - Math.cos(angle) * 2, head.y - Math.sin(angle) * 2);
+      ctx.lineTo(head.x - Math.cos(angle) * length, head.y - Math.sin(angle) * length);
+      ctx.stroke();
+    }
+
+    // Sharp comet head.
+    ctx.save();
+    ctx.translate(head.x, head.y);
+    ctx.rotate(angle);
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = mouse.hovering ? 20 : 12;
+    ctx.shadowColor = 'rgba(175,210,255,.95)';
+    ctx.beginPath();
+    ctx.moveTo(mouse.hovering ? 11 : 9, 0);
+    ctx.lineTo(-4, mouse.hovering ? -4.2 : -3.2);
+    ctx.lineTo(-1, 0);
+    ctx.lineTo(-4, mouse.hovering ? 4.2 : 3.2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(draw);
+  };
+
+  requestAnimationFrame(draw);
+})();
