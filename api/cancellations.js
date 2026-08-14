@@ -1,8 +1,26 @@
 import { neon } from '@neondatabase/serverless';
+import { createHmac } from 'node:crypto';
 
 const sql = neon(process.env.DATABASE_URL);
-const adminKey = process.env.HAVOX_ADMIN_KEY;
-function authorized(req) { return Boolean(adminKey && req.headers['x-havox-admin-key'] === adminKey); }
+const legacyAdminKey = process.env.HAVOX_ADMIN_KEY;
+const authSecret = process.env.HAVOX_AUTH_SECRET;
+
+function auth(req) {
+  const bearer = String(req.headers.authorization || '');
+  const token = bearer.startsWith('Bearer ') ? bearer.slice(7) : '';
+  if (!authSecret || !token) return null;
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature) return null;
+  const expected = createHmac('sha256', authSecret).update(payload).digest('base64url');
+  if (signature !== expected) return null;
+  try {
+    const user = JSON.parse(Buffer.from(payload, 'base64url').toString());
+    return user.exp > Date.now() ? user : null;
+  } catch { return null; }
+}
+function authorized(req) {
+  return Boolean(auth(req) || (legacyAdminKey && req.headers['x-havox-admin-key'] === legacyAdminKey));
+}
 
 export default async function handler(req, res) {
   try {
