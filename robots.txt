@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://resilient-kringle-443c2a.netlify.app/sitemap.xml
+Sitemap: https://havoxclothes.netlify.app/sitemap.xml
