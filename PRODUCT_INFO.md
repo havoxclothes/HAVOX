@@ -10,18 +10,19 @@ Fill in the blanks below directly on GitHub.
 
 # DESIGN 1
 
-Name: straw hat legacy
+Name: straw hat Gear 5
 Description: Premium oversized anime-inspired T-shirt
 T-shirt color:Black 
-GSM: 190
-Price (Rs.): 2100
+GSM: 220
+Price (Rs.): 2300
 M quantity:2 
 L quantity:4 
 XL quantity:2 
 Other sizes: 
 Special information: 
 
-Image filename: <img width="1536" height="1024" alt="1  Straw hat will" src="https://github.com/user-attachments/assets/1c26f930-d987-432b-a2f3-4f82de4db8f8" />
+Image filename: <img width="1341" height="1173" alt="image" src="https://github.com/user-attachments/assets/9066aa65-86be-4f9d-b23d-b67ae8e65ab8" />
+
 
 
 
@@ -29,18 +30,19 @@ Image filename: <img width="1536" height="1024" alt="1  Straw hat will" src="htt
 
 # DESIGN 2
 
-Name: Cursed king
+Name: Toji fushiguro
 Description:Premium oversized anime-inspired T-shirt 
 T-shirt color: Black
-GSM: 190
-Price (Rs.): 2100 
+GSM: 220
+Price (Rs.): 2300 
 M quantity: 1
 L quantity: 2
 XL quantity:1 
 Other sizes: 
 Special information: 
 
-Image filename: <img width="1536" height="1024" alt="2 Cursed king" src="https://github.com/user-attachments/assets/91543872-d387-4097-aa55-a9d8c21b51fb" />
+Image filename: <img width="1343" height="1171" alt="image" src="https://github.com/user-attachments/assets/23784817-623d-4730-bcb8-ea99f4f97a78" />
+
 
 
 ---
