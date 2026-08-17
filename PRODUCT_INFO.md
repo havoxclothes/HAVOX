@@ -49,7 +49,7 @@ Image filename: <img width="1343" height="1171" alt="image" src="https://github.
 
 # DESIGN 3
 
-Name: sun breather
+Name: Travis scot
 Description: Premium oversized anime-inspired T-shirt
 T-shirt color: White
 GSM: 220
@@ -60,7 +60,8 @@ XL quantity:2
 Other sizes: 
 Special information: 
 
-Image filename: <img width="1536" height="1024" alt="3 Sun breather" src="https://github.com/user-attachments/assets/e2a24146-2748-4f8c-8e88-d748fe4d7e7c" />
+Image filename: <img width="1341" height="1173" alt="3 Traviscot" src="https://github.com/user-attachments/assets/e69c613f-8a9e-4c64-b1c0-43155e223f0b" />
+
 
 
 ---
